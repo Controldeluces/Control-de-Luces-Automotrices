@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reporte de Pruebas · Eq4 WiFi Lighting</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{--guinda:#722F37;--dorado:#DAA520;--bg:#FAFAF8;--text:#1a1a1a;--muted:#555;--red-bg:#FFF0F0;--red-bdr:#C62828;--amber-bg:#FFFDE7;--amber-bdr:#E65100;--green-bg:#E8F5E9;--green-bdr:#2E7D32;--blue-bg:#E3F2FD;--blue-bdr:#1565C0;--purple-bg:#F3E5F5;--purple-bdr:#6A1B9A;--code-bg:#1a1b2e;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Source Serif 4',Georgia,serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px;}
+.hdr{background:var(--guinda);color:white;padding:26px 32px;}
+.hdr h1{font-size:20px;font-weight:600;}
+.hdr p{font-size:13px;opacity:.85;margin-top:3px;}
+.gold{height:4px;background:var(--dorado);}
+.wrap{max-width:780px;margin:0 auto;padding:28px 22px;}
+
+h2{font-size:18px;color:var(--guinda);border-bottom:2px solid var(--dorado);padding-bottom:5px;margin:28px 0 14px;}
+h3{font-size:15px;margin-bottom:6px;}
+
+.intro{background:var(--blue-bg);border:1px solid #BBDEFB;border-radius:10px;padding:18px 20px;margin-bottom:20px;font-size:14px;}
+.intro strong{color:var(--blue-bdr);}
+
+.box{padding:18px 20px;border-radius:10px;margin-bottom:16px;border-left:4px solid;}
+.box-red{background:var(--red-bg);border-color:var(--red-bdr);}
+.box-amber{background:var(--amber-bg);border-color:var(--amber-bdr);}
+.box-green{background:var(--green-bg);border-color:var(--green-bdr);}
+.box-blue{background:var(--blue-bg);border-color:var(--blue-bdr);}
+.box-purple{background:var(--purple-bg);border-color:var(--purple-bdr);}
+.box h3{display:flex;align-items:center;gap:8px;}
+.box p,.box ul,.box ol{font-size:14px;color:#333;}
+.box ul,.box ol{padding-left:20px;margin-top:6px;}
+.box li{margin-bottom:5px;}
+
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;color:white;vertical-align:middle;}
+.tag-fix{background:var(--red-bdr);}
+.tag-doc{background:var(--blue-bdr);}
+
+.analogy{background:#F9F0FF;border:1px dashed var(--purple-bdr);border-radius:8px;padding:14px 16px;margin:10px 0;font-size:14px;}
+.analogy strong{color:var(--purple-bdr);}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+th{background:var(--guinda);color:white;padding:8px 12px;text-align:left;font-weight:500;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+.bad{background:#FFEBEE;color:var(--red-bdr);font-weight:600;}
+.good{background:#E8F5E9;color:var(--green-bdr);font-weight:600;}
+
+.code{background:var(--code-bg);color:#CDD6F4;border-radius:10px;padding:16px 18px;margin:10px 0;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre;}
+.code .cm{color:#6C7086;}
+.code .kw{color:#CBA6F7;}
+.code .st{color:#A6E3A1;}
+.code .fn{color:#89B4FA;}
+.code .hl-bad{color:#F38BA8;text-decoration:line-through;}
+.code .hl-good{color:#A6E3A1;font-weight:500;}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0;}
+.cmp-bad,.cmp-good{padding:14px;border-radius:10px;font-size:13px;font-family:'JetBrains Mono',monospace;}
+.cmp-bad{background:#FFEBEE;border:1px solid #FFCDD2;}
+.cmp-bad h4{color:var(--red-bdr);font-size:12px;margin-bottom:6px;font-family:'Source Serif 4',serif;}
+.cmp-good{background:#E8F5E9;border:1px solid #C8E6C9;}
+.cmp-good h4{color:var(--green-bdr);font-size:12px;margin-bottom:6px;font-family:'Source Serif 4',serif;}
+
+.step-grid{margin:12px 0;}
+.step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.step-n{width:30px;height:30px;border-radius:50%;background:var(--guinda);color:white;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;flex-shrink:0;}
+.step-c{flex:1;font-size:14px;}
+.step-c strong{color:var(--guinda);}
+
+.divider{border:none;border-top:2px solid var(--dorado);margin:30px 0;}
+
+.footer{background:var(--guinda);color:white;padding:18px 32px;font-size:12px;text-align:center;margin-top:30px;}
+
+@media print{.code{font-size:10px;} .box{break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>Reporte de Pruebas de Software · Eq4 WiFi Lighting</h1>
+  <p>Testers: Dra. Diana L. Ávila Molina + Asistente de QA · UAG · Ingeniería de Software · Abril 2026</p>
+</div>
+<div class="gold"></div>
+
+<div class="wrap">
+
+<!-- ====== INTRO ====== -->
+<div class="intro">
+  <strong>¿Qué es este documento?</strong><br><br>
+  En la industria real de software, antes de que un producto salga al público, un equipo de <strong>testers</strong> (probadores) revisa el código buscando errores técnicos y vulnerabilidades de seguridad. Eso es exactamente lo que hicimos aquí.<br><br>
+  Su profesora y el asistente de QA actuaron como el <strong>equipo de pruebas</strong> de su proyecto. Revisamos su código línea por línea y encontramos <strong>6 hallazgos</strong>: 2 técnicos y 4 de seguridad. Este documento es su <strong>reporte de bugs</strong> — el mismo tipo de documento que recibirían en una empresa real.<br><br>
+  <strong>Su trabajo:</strong> Corregir los 5 hallazgos marcados como <span class="tag tag-fix">CORREGIR</span> y entender el que está marcado como <span class="tag tag-doc">DOCUMENTAR</span>. Al final está la guía para cargar todo a la ESP32.
+</div>
+
+<!-- ====================================== -->
+<!--          SECCIÓN: TÉCNICOS            -->
+<!-- ====================================== -->
+<h2>Parte A · Hallazgos técnicos</h2>
+
+<!-- T1: STRAPPING PINS -->
+<div class="box box-red">
+  <h3>T1 · Pines strapping — la ESP32 no arrancará con el power bank <span class="tag tag-fix">CORREGIR</span></h3>
+</div>
+
+<p><strong>¿Qué encontramos?</strong></p>
+<p>Su código usa 3 pines que son "pines strapping": <strong>GPIO2</strong>, <strong>GPIO5</strong> y <strong>GPIO15</strong>.</p>
+
+<p style="margin-top:12px;"><strong>¿Qué es un pin strapping?</strong></p>
+
+<div class="analogy">
+  <strong>Analogía:</strong> Imaginen que la ESP32 es un carro. Cuando le dan contacto (la conectan al power bank), el carro revisa 5 interruptores internos antes de arrancar el motor. Esos 5 interruptores son los <strong>pines strapping</strong>.<br><br>
+  Si alguno de esos interruptores tiene algo conectado que lo jala (un LED encendido, por ejemplo), la ESP32 piensa: <em>"Ah, quieren entrar en modo de programación"</em> — y se queda congelada. No arranca su código. La pantalla del celular nunca carga. Nada funciona.<br><br>
+  <strong>Esto les va a pasar exactamente en TecoWeek</strong> cuando desconecten la laptop y conecten el power bank. Los LEDs conectados a GPIO2, GPIO5 o GPIO15 pueden estar mandando señal en el momento del encendido, y la ESP32 no arrancará.
+</div>
+
+<p style="margin-top:12px;"><strong>¿Qué pines tienen mal y por cuáles los cambian?</strong></p>
+<p>Solo cambian <strong>3 cables físicos en la protoboard</strong> y <strong>3 números en el código</strong>:</p>
+
+<table>
+  <tr><th>Función</th><th>Pin actual</th><th>Problema</th><th>Pin nuevo</th></tr>
+  <tr>
+    <td>Direccional derecha [2]</td>
+    <td class="bad">GPIO2</td>
+    <td>Strapping — controla modo de arranque</td>
+    <td class="good">GPIO27</td>
+  </tr>
+  <tr>
+    <td>Faro trasero [2]</td>
+    <td class="bad">GPIO5</td>
+    <td>Strapping — afecta señal de arranque</td>
+    <td class="good">GPIO25</td>
+  </tr>
+  <tr>
+    <td>Reversa [1]</td>
+    <td class="bad">GPIO15</td>
+    <td>Strapping — afecta arranque UART</td>
+    <td class="good">GPIO26</td>
+  </tr>
+</table>
+
+<p style="margin-top:12px;"><strong>Paso 1 — Cambio en el código:</strong></p>
+<p>Busquen estas 3 líneas al inicio de su código y cámbienlas:</p>
+
+<div class="compare">
+  <div class="cmp-bad">
+    <h4>Código actual (mal)</h4>
+    faro_tras = [Pin(18), Pin(<strong style="color:#C62828">5</strong>)]<br><br>
+    reversa = [Pin(<strong style="color:#C62828">15</strong>), Pin(13)]<br><br>
+    direcc_der = [Pin(4), Pin(<strong style="color:#C62828">2</strong>)]
+  </div>
+  <div class="cmp-good">
+    <h4>Código corregido (bien)</h4>
+    faro_tras = [Pin(18), Pin(<strong style="color:#2E7D32">25</strong>)]<br><br>
+    reversa = [Pin(<strong style="color:#2E7D32">26</strong>), Pin(13)]<br><br>
+    direcc_der = [Pin(4), Pin(<strong style="color:#2E7D32">27</strong>)]
+  </div>
+</div>
+
+<p style="margin-top:12px;"><strong>Paso 2 — Cambio físico en la protoboard:</strong></p>
+<div class="step-grid">
+  <div class="step"><div class="step-n">1</div><div class="step-c">Desconecten la ESP32 del USB (nunca muevan cables con corriente).</div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-c">Busquen el cable que va de <strong>GPIO2</strong> a la direccional derecha. Desconéctenlo del pin GPIO2 y conéctenlo al pin <strong>GPIO27</strong> (búsquenlo impreso en su placa).</div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-c">Busquen el cable que va de <strong>GPIO5</strong> al faro trasero. Desconéctenlo y conéctenlo al pin <strong>GPIO25</strong>.</div></div>
+  <div class="step"><div class="step-n">4</div><div class="step-c">Busquen el cable que va de <strong>GPIO15</strong> a la reversa. Desconéctenlo y conéctenlo al pin <strong>GPIO26</strong>.</div></div>
+  <div class="step"><div class="step-n">5</div><div class="step-c">Vuelvan a conectar el USB. Abran Thonny. Corran el código corregido y verifiquen que las 3 funciones siguen funcionando con los pines nuevos.</div></div>
+</div>
+
+<div class="box box-green">
+  <p><strong>¿Cómo sé que funcionó?</strong> Si las direccionales derechas, los faros traseros y la reversa siguen encendiéndose desde la página web, el cambio fue exitoso. Si algo no enciende, revisen que el cable esté bien insertado en el pin correcto de la protoboard.</p>
+</div>
+
+<!-- T2: GC COLLECT -->
+<div class="box box-amber" style="margin-top:20px;">
+  <h3>T2 · Sin liberación de memoria — la ESP32 se congela después de ~20 minutos <span class="tag tag-fix">CORREGIR</span></h3>
+</div>
+
+<div class="analogy">
+  <strong>Analogía:</strong> Cada vez que alguien abre la página web desde su celular, la ESP32 usa un pedacito de memoria para procesar esa solicitud. El problema es que nunca limpia esos pedacitos usados. Es como si en un restaurante sirvieran en platos nuevos pero nunca lavaran los sucios — eventualmente se quedan sin platos y el restaurante se para.<br><br>
+  En su demo de TecoWeek, después de ~20 minutos de gente abriendo y cerrando la página, la ESP32 se va a congelar y dejará de responder.
+</div>
+
+<p style="margin-top:12px;"><strong>Corrección:</strong> Agregar 2 líneas a su código.</p>
+
+<p><strong>Línea 1 — Arriba del archivo, donde están los demás imports:</strong></p>
+<div class="code"><span class="kw">import</span> gc</div>
+
+<p><strong>Línea 2 — Dentro del <code>while True:</code>, justo antes del <code>continue</code>:</strong></p>
+<p>Busquen esta parte de su código:</p>
+<div class="code"><span class="kw">while</span> True:
+   actualizar_direccionales()
+
+   <span class="kw">try</span>:
+       conn, addr = s.accept()
+   <span class="kw">except</span> OSError:
+       <span class="hl-good">gc.collect()  <span class="cm"># AGREGAR ESTA LÍNEA</span></span>
+       <span class="kw">continue</span></div>
+
+<p>Eso es todo. La ESP32 ahora "lava los platos" cada vez que no hay cliente conectado. La demo puede durar horas sin congelarse.</p>
+
+<hr class="divider">
+
+<!-- ====================================== -->
+<!--          SECCIÓN: SEGURIDAD           -->
+<!-- ====================================== -->
+<h2>Parte B · Hallazgos de seguridad</h2>
+
+<p style="margin-bottom:14px;">En la industria automotriz, la norma <strong>ISO/SAE 21434</strong> exige que todo sistema electrónico vehicular pase por un análisis de ciberseguridad. Estos son los hallazgos que un auditor encontraría en su sistema:</p>
+
+<!-- S1: CONTRASEÑA EN CÓDIGO -->
+<div class="box box-red">
+  <h3>S1 · Contraseña WiFi visible en el código fuente <span class="tag tag-fix">CORREGIR</span></h3>
+</div>
+
+<p><strong>¿Qué encontramos?</strong></p>
+<p>En su archivo <code>main.py</code>, línea del WiFi, la contraseña está escrita directamente:</p>
+<div class="code">ap.config(essid=<span class="st">'esp32dealexayemery'</span>, password=<span class="hl-bad">'AleEme123'</span>)</div>
+
+<div class="analogy">
+  <strong>Analogía:</strong> Es como si un banco tuviera la combinación de la caja fuerte escrita con plumón en la puerta. Cualquiera que vea el archivo (en GitHub, en Teams, en la laptop) tiene acceso inmediato a su red WiFi. En la industria, esto es una violación grave — las credenciales <strong>nunca</strong> van dentro del código fuente.
+</div>
+
+<p style="margin-top:12px;"><strong>Corrección: Separar las credenciales en un archivo aparte.</strong></p>
+
+<p>Esto es exactamente lo que hacen los desarrolladores profesionales con archivos <code>.env</code>. Ustedes van a crear un archivo <code>config.py</code> que vive solo en la ESP32 y nunca se sube a GitHub.</p>
+
+<p><strong>Paso 1 — Crear un archivo nuevo llamado <code>config.py</code>:</strong></p>
+<p>En Thonny: <strong>Archivo → Nuevo</strong>. Escriban esto:</p>
+<div class="code"><span class="cm"># config.py — Credenciales del sistema</span>
+<span class="cm"># Este archivo NO se sube a GitHub</span>
+SSID = <span class="st">'esp32dealexayemery'</span>
+PASSWORD = <span class="st">'AleEme123'</span></div>
+
+<p>Guárdenlo como <code>config.py</code> (el nombre exacto importa).</p>
+
+<p><strong>Paso 2 — Modificar <code>main.py</code>:</strong></p>
+<p>Busquen las líneas del WiFi y cámbienlas:</p>
+
+<div class="compare">
+  <div class="cmp-bad">
+    <h4>Código actual (mal)</h4>
+    ap.config(<br>
+    &nbsp;&nbsp;essid='esp32dealexayemery',<br>
+    &nbsp;&nbsp;password='AleEme123')
+  </div>
+  <div class="cmp-good">
+    <h4>Código corregido (bien)</h4>
+    from config import SSID, PASSWORD<br><br>
+    ap.config(<br>
+    &nbsp;&nbsp;essid=SSID,<br>
+    &nbsp;&nbsp;password=PASSWORD)
+  </div>
+</div>
+
+<p><strong>Paso 3 — En GitHub</strong>, agregar <code>config.py</code> a su <code>.gitignore</code> y subir un archivo de ejemplo:</p>
+<div class="code"><span class="cm"># config_ejemplo.py — Plantilla (sin credenciales reales)</span>
+SSID = <span class="st">'NOMBRE_DE_TU_RED'</span>
+PASSWORD = <span class="st">'TU_CONTRASEÑA'</span></div>
+
+<div class="box box-green">
+  <p><strong>Resultado:</strong> El código en GitHub y en Teams ya no contiene la contraseña real. La contraseña solo existe dentro de la ESP32 física. Nadie puede verla sin tener el dispositivo en la mano.</p>
+</div>
+
+<!-- S2: SIN AUTENTICACIÓN -->
+<div class="box box-red" style="margin-top:20px;">
+  <h3>S2 · Servidor web sin autenticación — cualquiera controla las luces <span class="tag tag-fix">CORREGIR</span></h3>
+</div>
+
+<p><strong>¿Qué encontramos?</strong></p>
+<p>Cualquier persona que se conecte a la red WiFi <code>esp32dealexayemery</code> puede abrir <code>192.168.4.1</code> en su navegador y controlar todas las luces. No hay contraseña, no hay login, no hay ningún filtro.</p>
+
+<div class="analogy">
+  <strong>Analogía:</strong> Es como si la puerta del cuarto de control de luces de un edificio no tuviera cerradura. Cualquiera que entre al edificio (conectarse al WiFi) puede entrar al cuarto y apagar las luces del quirófano, de la sala de emergencias, de todo. En un auto real, esto significaría que un pasajero podría apagar los faros del conductor desde su celular.
+</div>
+
+<p style="margin-top:12px;"><strong>Corrección: Agregar una página de login antes de mostrar los controles.</strong></p>
+
+<p>Vamos a agregar una contraseña que el usuario debe escribir antes de poder controlar las luces. Modifiquen su código en dos partes:</p>
+
+<p><strong>Paso 1 — En <code>config.py</code></strong>, agregar la contraseña del panel:</p>
+<div class="code"><span class="cm"># config.py — Credenciales del sistema</span>
+SSID = <span class="st">'esp32dealexayemery'</span>
+PASSWORD = <span class="st">'AleEme123'</span>
+PANEL_KEY = <span class="st">'luces2026'</span>  <span class="cm"># Contraseña para controlar las luces</span></div>
+
+<p><strong>Paso 2 — En <code>main.py</code></strong>, actualizar el import:</p>
+<div class="code"><span class="kw">from</span> config <span class="kw">import</span> SSID, PASSWORD, PANEL_KEY</div>
+
+<p><strong>Paso 3 — En <code>main.py</code></strong>, agregar esta variable después de <code>first_load = True</code>:</p>
+<div class="code">sesiones_activas = []</div>
+
+<p><strong>Paso 4 — Dentro del bloque <code>try:</code> del servidor</strong>, reemplazar la parte donde procesan la solicitud. Busquen desde <code>request = conn.recv(1024).decode()</code> hasta <code>conn.sendall(html_resp)</code> y reemplácenla con esto:</p>
+<div class="code">   request = conn.recv(1024).decode()
+   ip_cliente = str(addr[0])
+   show_splash = False
+
+   <span class="cm"># Verificar si el cliente envía la clave</span>
+   <span class="kw">if</span> <span class="st">"clave="</span> <span class="kw">in</span> request:
+       clave_enviada = request.split(<span class="st">"clave="</span>)[1].split(<span class="st">" "</span>)[0].split(<span class="st">"&"</span>)[0]
+       <span class="kw">if</span> clave_enviada == PANEL_KEY:
+           <span class="kw">if</span> ip_cliente <span class="kw">not in</span> sesiones_activas:
+               sesiones_activas.append(ip_cliente)
+               log_evento(<span class="st">"Acceso autorizado: "</span> + ip_cliente)
+
+   <span class="cm"># Si el cliente no está autorizado, mostrar login</span>
+   <span class="kw">if</span> ip_cliente <span class="kw">not in</span> sesiones_activas:
+       login_html = <span class="st">"""&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;
+       &lt;meta charset="UTF-8"&gt;
+       &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+       &lt;style&gt;
+       body{margin:0;font-family:Arial;background:#050a18;color:white;
+            display:flex;justify-content:center;align-items:center;
+            height:100vh;flex-direction:column;}
+       input{padding:14px;font-size:18px;border-radius:10px;border:none;
+             width:240px;text-align:center;margin:10px 0;}
+       button{padding:14px 40px;font-size:18px;border-radius:10px;
+              border:none;background:#f1c40f;color:black;cursor:pointer;
+              font-weight:bold;}
+       &lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+       &lt;h2&gt;AE MOTORS&lt;/h2&gt;
+       &lt;p&gt;Ingrese la clave de acceso&lt;/p&gt;
+       &lt;input type="password" id="k" placeholder="Clave"&gt;
+       &lt;button onclick="location.href='/?clave='+document.getElementById('k').value"&gt;
+       Entrar&lt;/button&gt;
+       &lt;/body&gt;&lt;/html&gt;"""</span>
+       conn.send(<span class="st">'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n'</span>)
+       conn.sendall(login_html)
+       conn.close()
+       <span class="kw">continue</span>
+
+   <span class="cm"># --- A partir de aquí, el cliente ya está autorizado ---</span>
+   <span class="kw">if</span> <span class="st">"/?"</span> <span class="kw">in</span> request:
+       query = request.split(<span class="st">"GET /?"</span>)[1].split(<span class="st">" "</span>)[0]
+
+       <span class="kw">if</span> <span class="st">"todo=off"</span> <span class="kw">in</span> query:
+           apagar_todo()
+           show_splash = True
+       <span class="kw">elif</span> <span class="st">"="</span> <span class="kw">in</span> query:
+           key, action = query.split(<span class="st">"="</span>)[0], query.split(<span class="st">"="</span>)[1]
+           <span class="kw">if</span> key <span class="kw">in</span> estado <span class="kw">and</span> action == <span class="st">"toggle"</span>:
+               estado[key] = <span class="kw">not</span> estado[key]
+               log_evento(key.upper() + (<span class="st">' ON'</span> <span class="kw">if</span> estado[key] <span class="kw">else</span> <span class="st">' OFF'</span>))
+
+       aplicar()
+
+   html_resp = get_html(show_splash <span class="kw">or</span> first_load)
+   first_load = False
+   conn.send(<span class="st">'HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n'</span>)
+   conn.sendall(html_resp)</div>
+
+<div class="box box-green">
+  <p><strong>Resultado:</strong> Ahora cuando alguien abre <code>192.168.4.1</code>, ve una pantalla negra que dice "Ingrese la clave de acceso". Sin la clave correcta (<code>luces2026</code>), no puede ver ni controlar nada. La clave está en <code>config.py</code>, no en el código.</p>
+</div>
+
+<!-- S3: VALIDACIÓN -->
+<div class="box box-amber" style="margin-top:20px;">
+  <h3>S3 · Sin validación de entrada — el servidor acepta cualquier comando <span class="tag tag-fix">CORREGIR</span></h3>
+</div>
+
+<p><strong>¿Qué encontramos?</strong></p>
+<p>Si alguien escribe en el navegador <code>192.168.4.1/?hackeado=toggle</code>, el servidor lo procesa sin quejarse. No verifica que el comando sea válido.</p>
+
+<div class="analogy">
+  <strong>Analogía:</strong> Es como un mesero que acepta cualquier pedido sin verificar si existe en el menú. Si alguien pide "tráeme un dinosaurio asado", el mesero lo intenta. En software esto se llama <strong>inyección de comandos</strong> — alguien manda instrucciones que el sistema no debería aceptar.
+</div>
+
+<p style="margin-top:12px;"><strong>Corrección:</strong> Ya está incluida en el código de S2 de arriba. Noten esta parte:</p>
+<div class="code"><span class="kw">if</span> key <span class="kw">in</span> estado <span class="kw">and</span> action == <span class="st">"toggle"</span>:</div>
+
+<p>Esa línea hace dos verificaciones:</p>
+<ol style="margin:8px 0 0 20px;font-size:14px;">
+  <li><code>key in estado</code> — solo acepta comandos que existan: delanteras, traseras, frenos, reversa, izq, der, emergencia. Cualquier otra palabra es ignorada.</li>
+  <li><code>action == "toggle"</code> — solo acepta la acción "toggle". Cualquier otra acción es ignorada.</li>
+</ol>
+
+<div class="box box-green">
+  <p><strong>Resultado:</strong> Si alguien intenta <code>/?hackeado=toggle</code>, el servidor lo ignora porque "hackeado" no existe en el diccionario <code>estado</code>. Si intenta <code>/?delanteras=destruir</code>, lo ignora porque "destruir" no es "toggle".</p>
+</div>
+
+<!-- S4: HTTP SIN CIFRAR -->
+<div class="box box-blue" style="margin-top:20px;">
+  <h3>S4 · HTTP sin cifrar — la comunicación viaja en texto plano <span class="tag tag-doc">DOCUMENTAR</span></h3>
+</div>
+
+<p><strong>¿Qué encontramos?</strong></p>
+<p>Toda la comunicación entre el celular y la ESP32 viaja por HTTP (sin la "S" de seguro). Esto significa que los datos no van cifrados.</p>
+
+<div class="analogy">
+  <strong>Analogía:</strong> HTTP es como mandar una carta sin sobre — cualquiera que la intercepte en el camino puede leerla. HTTPS es como mandar esa carta dentro de una caja fuerte — aunque alguien la intercepte, no puede abrirla sin la llave.<br><br>
+  En un auto real, si el sistema de luces usara HTTP, un atacante con una antena WiFi podría "escuchar" todos los comandos que el conductor manda desde su celular y replicarlos.
+</div>
+
+<p style="margin-top:12px;"><strong>¿Por qué NO se puede corregir?</strong></p>
+<p>HTTPS requiere que el servidor maneje <strong>certificados de seguridad y cifrado TLS</strong>. Esto consume mucha memoria RAM y poder de procesamiento. La ESP32 con MicroPython tiene estas limitaciones:</p>
+
+<ul style="margin:8px 0 0 20px;font-size:14px;">
+  <li>Solo tiene <strong>520 KB de RAM</strong> — un certificado TLS y el handshake de cifrado consumen ~40-60 KB adicionales que no tiene disponibles mientras corre el servidor web.</li>
+  <li>MicroPython no incluye una librería de servidor HTTPS — tendría que implementarse desde cero, lo cual es inviable en el tiempo disponible.</li>
+  <li>La ESP32 funciona como <strong>Access Point local</strong> (no está en internet), lo que reduce el riesgo: un atacante tendría que estar físicamente cerca (~10 metros) para interceptar la señal.</li>
+</ul>
+
+<div class="box box-blue">
+  <p><strong>En la industria:</strong> Este problema se resuelve con hardware más potente (procesadores automotrices con módulos criptográficos dedicados) o con protocolos especializados como <strong>CAN bus cifrado</strong> o <strong>SecOC</strong> (Secure Onboard Communication) definidos en la norma <strong>ISO/SAE 21434</strong>. La ESP32 es un prototipo educativo — en producción real, nunca se usaría HTTP para controlar sistemas de un vehículo.</p>
+</div>
+
+<p style="margin-top:10px;"><strong>Para su presentación/poster:</strong> Documenten S4 como "vulnerabilidad conocida no resuelta por limitación de hardware" y mencionen que en producción se resolvería con HTTPS sobre hardware automotriz con soporte criptográfico nativo.</p>
+
+<hr class="divider">
+
+<!-- ====================================== -->
+<!--     SECCIÓN: GUÍA DE CARGA A ESP32    -->
+<!-- ====================================== -->
+<h2>Parte C · Cargar el código corregido a la ESP32</h2>
+
+<p>Ahora que tienen el código corregido, necesitan guardarlo <strong>dentro de la ESP32</strong> para que funcione con el power bank sin laptop. Van a guardar <strong>2 archivos</strong>:</p>
+
+<table>
+  <tr><th>#</th><th>Archivo</th><th>Contiene</th></tr>
+  <tr><td>1</td><td><code>config.py</code></td><td>Credenciales (SSID, PASSWORD, PANEL_KEY)</td></tr>
+  <tr><td>2</td><td><code>main.py</code></td><td>Todo el código del proyecto</td></tr>
+</table>
+
+<p style="margin-top:14px;"><strong>El orden importa: primero <code>config.py</code>, después <code>main.py</code>.</strong> Porque <code>main.py</code> importa de <code>config.py</code> — si <code>config.py</code> no existe en la ESP32 cuando guardan <code>main.py</code>, dará error.</p>
+
+<div class="step-grid" style="margin-top:14px;">
+  <div class="step"><div class="step-n">1</div><div class="step-c"><strong>Conecten la ESP32</strong> al USB de la laptop. Abran <strong>Thonny</strong>. Verifiquen que abajo diga <code>MicroPython (ESP32)</code>. Si no lo dice, vayan a <strong>Herramientas → Opciones → Intérprete</strong> y seleccionen <code>MicroPython (ESP32)</code>.</div></div>
+
+  <div class="step"><div class="step-n">2</div><div class="step-c"><strong>Guardar <code>config.py</code> en la ESP32:</strong><br>
+    En Thonny: <strong>Archivo → Nuevo</strong>. Escriban el contenido de config.py (las 3 líneas de credenciales).<br>
+    Luego: <strong>Archivo → Guardar como…</strong><br>
+    Les aparecerá una ventana que pregunta <strong>"¿Dónde guardar?"</strong> con dos opciones:<br><br>
+    <strong style="font-size:16px;">→ Elijan "Dispositivo MicroPython"</strong> (NO "Este computador")<br><br>
+    Escriban el nombre: <code>config.py</code><br>
+    Clic en <strong>OK</strong>.</div></div>
+
+  <div class="step"><div class="step-n">3</div><div class="step-c"><strong>Guardar <code>main.py</code> en la ESP32:</strong><br>
+    Abran su archivo main.py corregido (con los pines nuevos, el gc.collect, el config import, y el login).<br>
+    Luego: <strong>Archivo → Guardar como…</strong><br>
+    Elijan <strong>"Dispositivo MicroPython"</strong> de nuevo.<br>
+    Escriban el nombre: <code>main.py</code><br>
+    Clic en <strong>OK</strong>.<br><br>
+    <strong>El nombre <code>main.py</code> es obligatorio.</strong> La ESP32 busca un archivo que se llame exactamente <code>main.py</code> al encender. Si lo llaman <code>luces.py</code> o <code>proyecto.py</code>, la ESP32 enciende pero no ejecuta nada.</div></div>
+
+  <div class="step"><div class="step-n">4</div><div class="step-c"><strong>Probar que funciona desde Thonny:</strong><br>
+    Presionen el <strong>botón rojo STOP</strong> en Thonny (detiene cualquier programa anterior).<br>
+    Presionen el <strong>botón verde RUN ▶</strong>.<br>
+    En la consola debe aparecer: <code>Punto de Acceso listo. IP: 192.168.4.1</code><br>
+    Conéctense desde el celular al WiFi <code>esp32dealexayemery</code>.<br>
+    Abran <code>192.168.4.1</code> en el navegador.<br>
+    Deben ver la <strong>pantalla de login</strong> pidiendo la clave.<br>
+    Escriban <code>luces2026</code> y verifiquen que entran al panel de control.</div></div>
+
+  <div class="step"><div class="step-n">5</div><div class="step-c"><strong>Prueba final — desconectar la laptop:</strong><br>
+    Cierren Thonny.<br>
+    Desconecten el cable USB de la laptop.<br>
+    Conecten el <strong>power bank</strong> al USB de la ESP32.<br>
+    Esperen 5 segundos.<br>
+    Desde el celular, conéctense al WiFi y abran <code>192.168.4.1</code>.<br><br>
+    <strong>Si ven la pantalla de login y pueden controlar las luces después de ingresar la clave: ¡listo! Su proyecto funciona de forma autónoma.</strong><br><br>
+    Si la ESP32 NO arranca (no aparece el WiFi), fue porque un pin strapping quedó conectado. Revisen el paso T1 otra vez.</div></div>
+</div>
+
+<hr class="divider">
+
+<!-- RESUMEN FINAL -->
+<h2>Resumen de cambios</h2>
+
+<table>
+  <tr><th>#</th><th>Hallazgo</th><th>Tipo</th><th>Acción</th><th>Esfuerzo</th></tr>
+  <tr><td>T1</td><td>Pines strapping</td><td>Técnico</td><td class="good">Corregir</td><td>3 cables + 3 números</td></tr>
+  <tr><td>T2</td><td>Sin gc.collect()</td><td>Técnico</td><td class="good">Corregir</td><td>2 líneas</td></tr>
+  <tr><td>S1</td><td>Contraseña en código</td><td>Seguridad</td><td class="good">Corregir</td><td>1 archivo nuevo</td></tr>
+  <tr><td>S2</td><td>Sin autenticación</td><td>Seguridad</td><td class="good">Corregir</td><td>Bloque de login</td></tr>
+  <tr><td>S3</td><td>Sin validación</td><td>Seguridad</td><td class="good">Corregir</td><td>Ya incluido en S2</td></tr>
+  <tr><td>S4</td><td>HTTP sin cifrar</td><td>Seguridad</td><td style="background:#E3F2FD;color:#1565C0;font-weight:600;">Documentar</td><td>Limitación de hardware</td></tr>
+</table>
+
+<p style="margin-top:14px;"><strong>Archivos que deben tener en la ESP32 al final:</strong></p>
+<ol style="margin:8px 0 0 20px;font-size:14px;">
+  <li><code>config.py</code> — credenciales (3 variables)</li>
+  <li><code>main.py</code> — código completo corregido</li>
+</ol>
+
+<p style="margin-top:14px;"><strong>Archivos que deben tener en GitHub:</strong></p>
+<ol style="margin:8px 0 0 20px;font-size:14px;">
+  <li><code>main.py</code> — código completo (sin contraseñas)</li>
+  <li><code>config_ejemplo.py</code> — plantilla con valores falsos</li>
+  <li><code>.gitignore</code> — que incluya <code>config.py</code></li>
+</ol>
+
+</div>
+
+<div class="footer">
+  Reporte de Pruebas · Eq4 WiFi Lighting · Dra. Diana L. Ávila Molina · UAG · Ingeniería de Software · TecoWeek 2026
+</div>
+
+</body>
+</html>
